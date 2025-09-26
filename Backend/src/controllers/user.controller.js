@@ -37,14 +37,17 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All required fields must be provided");
   }
 
-  // Validate role
-  const validRoles = ["admin", "donor", "hospital_admin", "blood_bank_admin"];
+  // Validate role - accept both frontend and backend role names
+  const validRoles = ["admin", "donor", "hospital_admin", "blood_bank_admin", "blood_bank"];
   if (!validRoles.includes(role)) {
     throw new ApiError(400, "Invalid role specified");
   }
 
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Normalize role name for database storage
+  const normalizedRole = role === "blood_bank" ? "blood_bank_admin" : role;
+
+  // Email validation - more lenient regex
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(email)) {
     throw new ApiError(400, "Invalid email format");
   }
@@ -94,7 +97,9 @@ const registerUser = asyncHandler(async (req, res) => {
     email: email.toLowerCase(),
     password, // ✅ Raw password - will be hashed by model
     role,
-    personalInfo,
+    personalInfo: {
+      profilePicture: profilePictureUrl
+    },
     accountStatus: {
       isActive: true,
       isVerified: true, // ✅ Auto-verified for now
@@ -104,31 +109,31 @@ const registerUser = asyncHandler(async (req, res) => {
   };
 
   // Handle organization-specific data
-  if (role === 'hospital_admin' || role === 'blood_bank_admin') {
-    if (!organizationData) {
-      throw new ApiError(400, "Organization data required for admin roles");
-    }
-
-    // Validate required organization fields - make more flexible
-    const requiredOrgFields = ['organizationName', 'designation'];
-    for (const field of requiredOrgFields) {
-      if (!organizationData[field]?.trim()) {
-        throw new ApiError(400, `Organization ${field} is required`);
-      }
-    }
-
-    userData.organizationInfo = {
-      organizationType: role === 'hospital_admin' ? 'Hospital' : 'BloodBank',
-      organizationName: organizationData.organizationName,
-      designation: organizationData.designation,
-      department: organizationData.department || 'General',
-      employeeId: organizationData.employeeId || `EMP${Date.now()}`,
+  if (normalizedRole === 'hospital_admin' || normalizedRole === 'blood_bank_admin') {
+    // Provide default organization data if not provided
+    const defaultOrgData = {
+      organizationName: organizationData?.organizationName || `${fullName}'s Organization`,
+      designation: organizationData?.designation || 'Administrator',
+      organizationType: normalizedRole === 'hospital_admin' ? 'Hospital' : 'BloodBank',
+      department: organizationData?.department || 'Administration',
+      employeeId: organizationData?.employeeId || `EMP${Date.now()}`,
       joiningDate: new Date(),
-      permissions: organizationData.permissions || getDefaultPermissions(role)
+      permissions: [
+        { module: 'inventory', actions: ['create', 'read', 'update', 'delete'] },
+        { module: 'requests', actions: ['create', 'read', 'update', 'delete', 'approve', 'reject'] },
+        { module: 'donors', actions: ['create', 'read', 'update', 'delete'] },
+        { module: 'staff', actions: ['create', 'read', 'update', 'delete'] },
+        { module: 'reports', actions: ['read'] },
+        { module: 'alerts', actions: ['create', 'read', 'update', 'delete'] },
+        { module: 'analytics', actions: ['read'] },
+        { module: 'patients', actions: ['create', 'read', 'update', 'delete'] }
+      ]
     };
 
+    userData.organizationInfo = defaultOrgData;
+
     // Only validate organization exists if ID provided
-    if (organizationData.organizationId) {
+    if (organizationData && organizationData.organizationId) {
       try {
         const Organization = role === 'hospital_admin' ? Hospital : BloodBank;
         const orgExists = await Organization.findById(organizationData.organizationId);
@@ -216,6 +221,8 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     $or: [{ username }, { email }]
   });
+
+  console.log('Login attempt:', { username, email, userFound: !!user });
 
   if (!user) {
     throw new ApiError(404, "User does not exist");
