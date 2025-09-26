@@ -116,5 +116,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+# WhatsApp session and cache
+Backend/.wwebjs_auth/
+Backend/.wwebjs_auth/
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node

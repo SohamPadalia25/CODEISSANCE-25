@@ -52,7 +52,23 @@ const userSchema = new mongoose.Schema(
         state: { type: String },
         pincode: { type: String },
         country: { type: String, default: "India" }
+      },
+      emergencyContacts: [  
+    {
+      name: { type: String, required: true },
+      relation: { type: String, required: true },
+      phone: {
+        type: String,
+        required: true,
+        validate: {
+          validator: function(v) {
+            return /\d{10}/.test(v);
+          },
+          message: 'Emergency contact number should be 10 digits'
+        }
       }
+    }
+  ]
     },
     organizationInfo: {
       organizationId: {

@@ -30,7 +30,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   console.log('Registration attempt:', { role: req.body.role, hasOrgData: !!req.body.organizationData });
   
-  const { fullName, username, email, password, role, organizationData } = req.body;
+  const { fullName, username, email, password, role, organizationData,personalInfo } = req.body;
 
   // Validation
   if ([fullName, username, email, password, role].some(field => !field?.trim())) {
@@ -94,9 +94,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email: email.toLowerCase(),
     password, // ✅ Raw password - will be hashed by model
     role,
-    personalInfo: {
-      profilePicture: profilePictureUrl
-    },
+    personalInfo,
     accountStatus: {
       isActive: true,
       isVerified: true, // ✅ Auto-verified for now

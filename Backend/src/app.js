@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import donorRoutes from './routes/donor.routes.js'
+import emergencyRoutes from "./routes/emergency.routes.js";
+
+
 
 const app = express();
 
@@ -19,6 +22,9 @@ app.use(cookieParser());
 
 // Import routes
 import userRouter from "./routes/user.routes.js";
+
+//emergency SOS
+app.use("/api/emergency", emergencyRoutes);
 
 // Health check route
 app.get("/api/v1/health", (req, res) => {
