@@ -26,19 +26,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
       id: 'requests', 
       label: 'Blood Requests', 
       icon: Droplets,
-      subItems: [
-        { id: 'requests-active', label: 'Active Requests' },
-        { id: 'requests-history', label: 'Request History' }
-      ]
     },
     { 
       id: 'inventory', 
       label: 'Inventory', 
       icon: Heart,
-      subItems: [
-        { id: 'inventory-blood', label: 'Blood Inventory' },
-        { id: 'inventory-organs', label: 'Organ Inventory' }
-      ]
+
     },
     { id: 'patients', label: 'Patients', icon: Users },
     { id: 'emergency', label: 'Emergency SOS', icon: AlertTriangle },
