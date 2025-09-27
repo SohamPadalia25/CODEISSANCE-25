@@ -18,7 +18,7 @@ const Header = () => {
             <div className="w-10 h-10 bg-primary-foreground rounded-full flex items-center justify-center">
               <div className="text-primary font-bold text-sm">eR</div>
             </div>
-            <span className="font-semibold text-lg">e-RaktKosh</span>
+            <span className="font-semibold text-lg">Aarogya-Mitra</span>
           </div>
 
           {/* Navigation */}
@@ -101,7 +101,7 @@ const Header = () => {
 
             {/* Dashboard (no dropdown) */}
             <span className="cursor-pointer hover:text-primary-light transition-colors duration-200">
-              E-RAKTKOSH DASHBOARD
+              Aarogya-Mitra DASHBOARD
             </span>
           </nav>
 

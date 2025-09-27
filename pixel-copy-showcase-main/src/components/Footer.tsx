@@ -30,7 +30,7 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-foreground mb-4">Blood Center Login</h3>
             <ul className="space-y-2 text-muted-foreground">
-              <li><a href="#" className="hover:text-primary">e-Raktkosh Login</a></li>
+              <li><a href="#" className="hover:text-primary">Aarogya-Mitra Login</a></li>
               <li><a href="#" className="hover:text-primary">Add your Blood Center</a></li>
             </ul>
           </div>
@@ -39,9 +39,9 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-foreground mb-4">About Us</h3>
             <ul className="space-y-2 text-muted-foreground">
-              <li><a href="#" className="hover:text-primary">About e-Raktkosh</a></li>
+              <li><a href="#" className="hover:text-primary">About Aarogya-Mitra</a></li>
               <li><a href="#" className="hover:text-primary">Notifications</a></li>
-              <li><a href="#" className="hover:text-primary">e-Raktkosh FAQs</a></li>
+              <li><a href="#" className="hover:text-primary">Aarogya-Mitra FAQs</a></li>
               <li><a href="#" className="hover:text-primary">Gallery</a></li>
               <li><a href="#" className="hover:text-primary">Video Gallery</a></li>
               <li><a href="#" className="hover:text-primary">Contact Us</a></li>
@@ -51,7 +51,7 @@ const Footer = () => {
 
           {/* Download App */}
           <div>
-            <h3 className="font-bold text-foreground mb-4">Download e-raktkosh App</h3>
+            <h3 className="font-bold text-foreground mb-4">Download Aarogya-Mitra App</h3>
             <div className="space-y-3">
               <a href="#" className="block">
                 <div className="bg-black text-white p-3 rounded-lg flex items-center space-x-2">
@@ -82,7 +82,7 @@ const Footer = () => {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
                 <div className="text-primary font-bold">eR</div>
               </div>
-              <div className="text-xs text-muted-foreground">e-RaktKosh</div>
+              <div className="text-xs text-muted-foreground">Aarogya-Mitra</div>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
