@@ -30,6 +30,7 @@ import Alerts from "./pages/Alerts";
 import Appointments from "./pages/Appointments";
 import Health from "./pages/Health";
 import NotFound from "./pages/NotFound";
+import AIAssistant from "./pages/Assistance";
 
 
 import { ThemeProvider } from "./context/ThemeContext";
@@ -84,6 +85,7 @@ const App = () => (
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/health" element={<Health />} />
+          <Route path="/assistance" element={<AIAssistant/>}/>
 
           
 

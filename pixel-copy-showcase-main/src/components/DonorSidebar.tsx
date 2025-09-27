@@ -30,7 +30,7 @@ const navigationItems = [
   { title: "Appointments", url: "/appointments", icon: Calendar },
   { title: "Health", url: "/health", icon: Heart },
   { title: "Community", url: "/community", icon: Users },
-  { title: "AI Help", url: "/ai-help", icon: Bot },
+  { title: "AI Help", url: "/assistance", icon: Bot },
 ];
 
 export function DonorSidebar() {

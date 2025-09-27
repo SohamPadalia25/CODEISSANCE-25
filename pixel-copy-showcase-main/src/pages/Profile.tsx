@@ -11,21 +11,33 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Upload, QrCode, Award, Shield, Phone, Mail, Calendar, Heart } from "lucide-react";
+import { Upload, QrCode, Award, Shield, Phone, Mail, Calendar, Heart, FileText, Download, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const Profile = () => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [profileData, setProfileData] = useState({
-    name: "John Donor",
-    email: "john@example.com",
-    phone: "+1 (555) 123-4567",
-    age: "32",
+    name: "Vatsal Jain",
+    email: "vssv262024@gmail.com",
+    phone: "+ 9136519205",
+    age: "23",
     gender: "Male",
     bloodGroup: "O+",
     organDonation: true,
-    emergencyContact: "Jane Donor - +1 (555) 987-6543",
+    emergencyContact: "Shreyash Singh - 8169698989",
     medicalHistory: "No major surgeries. Last donation: 3 months ago."
+  });
+
+  const [profileImage, setProfileImage] = useState("/placeholder.svg");
+  const [medicalReports, setMedicalReports] = useState([]);
+  const [showQrCode, setShowQrCode] = useState(false);
+  const [extractedMedicalData, setExtractedMedicalData] = useState({
+    bloodPressure: "120/80 mmHg",
+    cholesterol: "180 mg/dL",
+    lastCheckup: "2024-01-15",
+    conditions: ["None"],
+    medications: ["None"],
+    allergies: ["None"]
   });
 
   const badges = [
@@ -38,6 +50,116 @@ const Profile = () => {
     toast({
       title: "Profile Updated",
       description: "Your profile information has been successfully updated.",
+    });
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setProfileImage(e.target.result);
+          toast({
+            title: "Profile Photo Updated",
+            description: "Your profile photo has been successfully updated.",
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        toast({
+          title: "Invalid File",
+          description: "Please upload an image file.",
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const handleMedicalReportUpload = (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length > 0) {
+      const newReports = files.map(file => ({
+        id: Date.now() + Math.random(),
+        name: file.name,
+        size: (file.size / 1024).toFixed(2) + ' KB',
+        date: new Date().toLocaleDateString(),
+        type: file.type,
+        file: file
+      }));
+
+      setMedicalReports(prev => [...prev, ...newReports]);
+      
+      // Simulate PDF data extraction
+      simulatePDFExtraction(files[0]);
+      
+      toast({
+        title: "Medical Reports Uploaded",
+        description: `${files.length} report(s) have been uploaded and processed.`,
+      });
+    }
+  };
+
+  const simulatePDFExtraction = (file) => {
+    // Simulate AI extraction from PDF
+    setTimeout(() => {
+      const mockExtractedData = {
+        bloodPressure: `${110 + Math.floor(Math.random() * 20)}/${70 + Math.floor(Math.random() * 15)} mmHg`,
+        cholesterol: `${150 + Math.floor(Math.random() * 50)} mg/dL`,
+        lastCheckup: new Date(Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        conditions: Math.random() > 0.7 ? ["Hypertension"] : ["None"],
+        medications: Math.random() > 0.6 ? ["Aspirin"] : ["None"],
+        allergies: Math.random() > 0.8 ? ["Penicillin"] : ["None"]
+      };
+      
+      setExtractedMedicalData(mockExtractedData);
+      
+      toast({
+        title: "Data Extracted",
+        description: "Medical data has been successfully extracted from the report.",
+      });
+    }, 2000);
+  };
+
+  const handleRemoveReport = (reportId) => {
+    setMedicalReports(prev => prev.filter(report => report.id !== reportId));
+    toast({
+      title: "Report Removed",
+      description: "The medical report has been removed.",
+    });
+  };
+
+  const handleDownloadReport = (report) => {
+    // Simulate download functionality
+    const url = URL.createObjectURL(report.file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = report.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Download Started",
+      description: `Downloading ${report.name}`,
+    });
+  };
+
+  const toggleQrCode = () => {
+    setShowQrCode(!showQrCode);
+    toast({
+      title: showQrCode ? "QR Code Hidden" : "QR Code Displayed",
+      description: showQrCode ? "QR code is now hidden." : "Your donor QR code is now visible.",
+    });
+  };
+
+  const generateDonorQRData = () => {
+    return JSON.stringify({
+      name: profileData.name,
+      bloodGroup: profileData.bloodGroup,
+      emergencyContact: profileData.emergencyContact,
+      lastUpdated: new Date().toISOString()
     });
   };
 
@@ -70,13 +192,26 @@ const Profile = () => {
                   <CardContent className="space-y-6">
                     <div className="flex flex-col items-center space-y-4">
                       <Avatar className="w-24 h-24">
-                        <AvatarImage src="/placeholder.svg" />
-                        <AvatarFallback>JD</AvatarFallback>
+                        <AvatarImage src={profileImage} alt="Profile" />
+                        <AvatarFallback>
+                          {profileData.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
                       </Avatar>
-                      <Button variant="outline" size="sm">
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload Photo
-                      </Button>
+                      <input
+                        type="file"
+                        id="profile-upload"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageUpload}
+                      />
+                      <label htmlFor="profile-upload">
+                        <Button variant="outline" size="sm" asChild>
+                          <span>
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Photo
+                          </span>
+                        </Button>
+                      </label>
                     </div>
 
                     <div className="space-y-4">
@@ -112,10 +247,57 @@ const Profile = () => {
                       <p className="text-sm text-muted-foreground">85% - Excellent fitness to donate</p>
                     </div>
 
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full" onClick={toggleQrCode}>
                       <QrCode className="h-4 w-4 mr-2" />
-                      Show QR Code
+                      {showQrCode ? "Hide QR Code" : "Show QR Code"}
                     </Button>
+
+                    {showQrCode && (
+                      <div className="flex flex-col items-center p-4 border rounded-lg">
+                        <div className="w-32 h-32 bg-gray-100 flex items-center justify-center rounded">
+                          <span className="text-sm text-muted-foreground">QR Code Preview</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2 text-center">
+                          Scan this code for emergency donor information
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Extracted Medical Data */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Extracted Medical Data</CardTitle>
+                    <CardDescription>AI-extracted information from your reports</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="font-medium">Blood Pressure:</span>
+                        <p>{extractedMedicalData.bloodPressure}</p>
+                      </div>
+                      <div>
+                        <span className="font-medium">Cholesterol:</span>
+                        <p>{extractedMedicalData.cholesterol}</p>
+                      </div>
+                      <div>
+                        <span className="font-medium">Last Checkup:</span>
+                        <p>{extractedMedicalData.lastCheckup}</p>
+                      </div>
+                      <div>
+                        <span className="font-medium">Conditions:</span>
+                        <p>{extractedMedicalData.conditions.join(", ")}</p>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="font-medium">Medications:</span>
+                        <p>{extractedMedicalData.medications.join(", ")}</p>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="font-medium">Allergies:</span>
+                        <p>{extractedMedicalData.allergies.join(", ")}</p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -245,11 +427,84 @@ const Profile = () => {
                       <Button onClick={handleSave} className="flex-1">
                         Save Changes
                       </Button>
-                      <Button variant="outline">
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload Medical Reports
-                      </Button>
+                      <input
+                        type="file"
+                        id="medical-upload"
+                        accept=".pdf,.doc,.docx,image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleMedicalReportUpload}
+                      />
+                      <label htmlFor="medical-upload">
+                        <Button variant="outline" asChild>
+                          <span>
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Medical Reports
+                          </span>
+                        </Button>
+                      </label>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* Medical Reports Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Medical Reports</CardTitle>
+                    <CardDescription>Your uploaded medical documents and test results</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {medicalReports.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>No medical reports uploaded yet.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {medicalReports.map((report) => (
+                          <div key={report.id} className="flex items-center justify-between p-3 border rounded-lg">
+                            <div className="flex items-center space-x-3">
+                              <FileText className="h-8 w-8 text-blue-500" />
+                              <div>
+                                <p className="font-medium">{report.name}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {report.size} • {report.date}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDownloadReport(report)}
+                              >
+                                <Download className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  // Simulate view functionality
+                                  toast({
+                                    title: "Viewing Report",
+                                    description: `Opening ${report.name} in viewer...`,
+                                  });
+                                }}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleRemoveReport(report.id)}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
 
