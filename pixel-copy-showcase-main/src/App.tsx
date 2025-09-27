@@ -42,6 +42,7 @@ import EmergencyRequests from "./components/Emergency/EmergencyRequests";
 import MatchedDonors from "./components/Donors/MatchedDonors";
 import AnalyticsDashboard from "./components/Analytics/AnalyticsDashboard";
 import StaffManager from "./components/Staff/StaffManager";
+import AIAssistant from "./pages/Assistance";
 const queryClient = new QueryClient();
 
 const HospitalDashboardLayout = () => {
@@ -85,9 +86,8 @@ const App = () => (
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/health" element={<Health />} />
-          <Route path="/assistance" element={<AIAssistant/>}/>
-
-          
+<Route path="/community" element={<Community />} />
+          <Route path="/assistance" element={<AIAssistant />} />
 
           {/* Dashboard (second app) routes */}
           <Route path="/dashboard" element={<DashboardLayout />}>
