@@ -30,7 +30,7 @@ import Alerts from "./pages/Alerts";
 import Appointments from "./pages/Appointments";
 import Health from "./pages/Health";
 import NotFound from "./pages/NotFound";
-import AIAssistant from "./pages/Assistance";
+
 
 
 import { ThemeProvider } from "./context/ThemeContext";
@@ -43,7 +43,9 @@ import MatchedDonors from "./components/Donors/MatchedDonors";
 import AnalyticsDashboard from "./components/Analytics/AnalyticsDashboard";
 import StaffManager from "./components/Staff/StaffManager";
 import AIAssistant from "./pages/Assistance";
+import Community from "./pages/Community";
 const queryClient = new QueryClient();
+
 
 const HospitalDashboardLayout = () => {
   return (
