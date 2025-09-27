@@ -16,7 +16,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-primary-foreground rounded-full flex items-center justify-center">
-              <div className="text-primary font-bold text-sm">eR</div>
+              <div className="text-primary font-bold text-sm">AM</div>
             </div>
             <span className="font-semibold text-lg">Aarogya-Mitra</span>
           </div>
@@ -50,13 +50,13 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link to="/search-blood">Search Blood Availability</Link>
+                  <Link to="/search-blood">Search Donor Availability</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/nearby-banks">Nearby Blood Banks</Link>
+                  <Link to="/nearby-banks">Nearby Donor Banks</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link to="/request-blood">Request Blood</Link>
+                  <Link to="/request-blood">Request </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
