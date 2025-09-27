@@ -30,8 +30,9 @@ import Alerts from "./pages/Alerts";
 import Appointments from "./pages/Appointments";
 import Health from "./pages/Health";
 import NotFound from "./pages/NotFound";
+import AIAssistant from "./pages/Assistance";
 
-import Community from "./pages/Community";
+
 import { ThemeProvider } from "./context/ThemeContext";
 import Sidebar from "./components/Layout/Sidebar";
 import Header from "./components/Layout/Header";
@@ -84,7 +85,8 @@ const App = () => (
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/health" element={<Health />} />
-<Route path="/community" element={<Community />} />
+          <Route path="/assistance" element={<AIAssistant/>}/>
+
           
 
           {/* Dashboard (second app) routes */}
